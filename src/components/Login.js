@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import { useForm } from "react-hook-form";
+
 import { login as loginService } from '../services/auth';
 import { ROUTES } from '../constants';
 
@@ -56,6 +58,8 @@ export default function Login(props) {
   const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const { handleSubmit, register, errors } = useForm();
+
   const onChangeEmail = (e) => {
     const email = e.target.value;
     setUsername(email);
@@ -66,13 +70,11 @@ export default function Login(props) {
     setPassword(password);
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-  
+  const handleLogin = async _ => {
     const response = await loginService(email, password);
   
     if (response) {
-      history.push(ROUTES.DASHBOARD);
+      return history.push(ROUTES.DASHBOARD);
     }
   };
 
@@ -88,7 +90,7 @@ export default function Login(props) {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleLogin}>
+        <form className={classes.form} noValidate onSubmit={handleSubmit(handleLogin)}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -100,6 +102,15 @@ export default function Login(props) {
             autoComplete="email"
             autoFocus
             onChange={onChangeEmail}
+            inputRef={register({
+              required: "Required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email address"
+              }
+            })}
+            error={!!errors?.email?.message}
+            helperText={!!errors?.email?.message && errors.email.message}
           />
           <TextField
             variant="outlined"
@@ -112,6 +123,11 @@ export default function Login(props) {
             id="password"
             autoComplete="current-password"
             onChange={onChangePassword}
+            inputRef={register({
+              required: "Required",
+            })}
+            error={!!errors?.password?.message}
+            helperText={!!errors?.password?.message && errors.password.message}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
