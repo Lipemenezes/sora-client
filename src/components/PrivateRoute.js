@@ -5,9 +5,9 @@ const storage = window.localStorage;
 
 const isUserAuthenticated = () => {
   const token = storage.getItem(SESSION_PROPERTY.TOKEN);
-  const email = storage.getItem(SESSION_PROPERTY.EMAIL);
+  // const email = storage.getItem(SESSION_PROPERTY.EMAIL);
 
-  if (!token || !email) return false;
+  if (!token) return false;
   
   return true;
 };

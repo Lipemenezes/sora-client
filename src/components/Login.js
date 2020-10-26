@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,12 +14,15 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import { login as loginService } from '../services/auth';
+import { ROUTES } from '../constants';
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://github.com/Lipemenezes/">
+        Felipe Menezes
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -46,7 +50,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+
+export default function Login(props) {
+  const history = useHistory();
+  const [email, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const onChangeEmail = (e) => {
+    const email = e.target.value;
+    setUsername(email);
+  };
+
+  const onChangePassword = (e) => {
+    const password = e.target.value;
+    setPassword(password);
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+  
+    const response = await loginService(email, password);
+  
+    if (response) {
+      history.push(ROUTES.DASHBOARD);
+    }
+  };
+
   const classes = useStyles();
 
   return (
@@ -59,7 +88,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={handleLogin}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -70,6 +99,7 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={onChangeEmail}
           />
           <TextField
             variant="outlined"
@@ -81,6 +111,7 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={onChangePassword}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
