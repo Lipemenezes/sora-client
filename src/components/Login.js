@@ -19,6 +19,8 @@ import { useForm } from "react-hook-form";
 import { login as loginService } from '../services/auth';
 import { ROUTES } from '../constants';
 
+import CustomSnackbar from './CustomSnackbar';
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -57,6 +59,7 @@ export default function Login(props) {
   const history = useHistory();
   const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showFormError, setShowFormError] = useState({ show: false, message: '' });
 
   const { handleSubmit, register, errors } = useForm();
 
@@ -71,11 +74,15 @@ export default function Login(props) {
   };
 
   const handleLogin = async _ => {
+    setShowFormError({ show: false });
+
     const response = await loginService(email, password);
   
-    if (response) {
+    if (response.success) {
       return history.push(ROUTES.DASHBOARD);
     }
+
+    setShowFormError({ show: true, message: response.message });
   };
 
   const classes = useStyles();
@@ -125,6 +132,7 @@ export default function Login(props) {
             onChange={onChangePassword}
             inputRef={register({
               required: "Required",
+              minLength: 6,
             })}
             error={!!errors?.password?.message}
             helperText={!!errors?.password?.message && errors.password.message}
@@ -154,6 +162,7 @@ export default function Login(props) {
       <Box mt={8}>
         <Copyright />
       </Box>
+      {showFormError.show && <CustomSnackbar open type="error" message={showFormError.message}/>}
     </Container>
   );
 }

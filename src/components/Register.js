@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,6 +10,15 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
+import { useHistory } from 'react-router-dom';
+import { useForm } from "react-hook-form";
+
+import { register as registerService } from '../services/auth';
+
+import { ROUTES } from '../constants';
+
+import CustomSnackbar from './CustomSnackbar';
 
 function Copyright() {
   return (
@@ -46,6 +55,46 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
+  const history = useHistory();
+  const { handleSubmit, register, errors } = useForm();
+
+  const [email, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [showFormError, setShowFormError] = useState({ show: false, message: '' });
+
+  const onChangeEmail = (e) => {
+    const email = e.target.value;
+    setUsername(email);
+  };
+
+  const onChangePassword = (e) => {
+    const password = e.target.value;
+    setPassword(password);
+  };
+
+  const onChangeFirstName = (e) => {
+    const firstName = e.target.value;
+    setFirstName(firstName);
+  };
+
+  const onChangeLastName = (e) => {
+    const lastName = e.target.value;
+    setLastName(lastName);
+  };
+
+  const handleRegister = async _ => {
+    setShowFormError({ show: false });
+    const response = await registerService(email, password, firstName, lastName);
+  
+    if (response.success) {
+      setShowFormError({ show: false });
+      return history.push(ROUTES.DASHBOARD);
+    }
+
+    setShowFormError({ show: true, message: response.message });
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -57,7 +106,7 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={handleSubmit(handleRegister)}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -69,6 +118,13 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                onChange={onChangeFirstName}
+                inputRef={register({
+                  required: "Required",
+                  minLength: 2,
+                })}
+                error={!!errors?.firstName?.message}
+                helperText={!!errors?.firstName?.message && errors.firstName.message}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -80,6 +136,13 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                onChange={onChangeLastName}
+                inputRef={register({
+                  required: "Required",
+                  minLength: 2,
+                })}
+                error={!!errors?.lastName?.message}
+                helperText={!!errors?.lastName?.message && errors.lastName.message}
               />
             </Grid>
             <Grid item xs={12}>
@@ -91,6 +154,16 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={onChangeEmail}
+                inputRef={register({
+                  required: "Required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address"
+                  }
+                })}
+                error={!!errors?.email?.message}
+                helperText={!!errors?.email?.message && errors.email.message}
               />
             </Grid>
             <Grid item xs={12}>
@@ -103,6 +176,13 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={onChangePassword}
+                inputRef={register({
+                  required: "Required",
+                  minLength: 6,
+                })}
+                error={!!errors?.password?.message}
+                helperText={!!errors?.password?.message && errors.password.message}
               />
             </Grid>
           </Grid>
@@ -127,6 +207,7 @@ export default function SignUp() {
       <Box mt={5}>
         <Copyright />
       </Box>
+      {showFormError.show && <CustomSnackbar open type="error" message={showFormError.message}/>}
     </Container>
   );
 }
