@@ -1,4 +1,4 @@
-import http from '../http-common';
+import http from '../httpCommon';
 import { SESSION_PROPERTY, API_ROUTES } from '../constants';
 
 export async function register(email, password, firstName, lastName) {
