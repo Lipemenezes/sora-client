@@ -56,24 +56,12 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function Login(props) {
+  const classes = useStyles();
   const history = useHistory();
-  const [email, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [showFormError, setShowFormError] = useState({ show: false, message: '' });
-
-  const { handleSubmit, register, errors } = useForm();
-
-  const onChangeEmail = (e) => {
-    const email = e.target.value;
-    setUsername(email);
-  };
-
-  const onChangePassword = (e) => {
-    const password = e.target.value;
-    setPassword(password);
-  };
-
-  const handleLogin = async _ => {
+  const { handleSubmit, register, errors } = useForm({ mode: 'onChange' });
+  
+  const handleLogin = async ({ email, password }) => {
     setShowFormError({ show: false });
 
     const response = await loginService(email, password);
@@ -84,8 +72,6 @@ export default function Login(props) {
 
     setShowFormError({ show: true, message: response.message });
   };
-
-  const classes = useStyles();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -108,9 +94,8 @@ export default function Login(props) {
             name="email"
             autoComplete="email"
             autoFocus
-            onChange={onChangeEmail}
             inputRef={register({
-              required: "Required",
+              required: "Email is required",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: "Invalid email address"
@@ -129,10 +114,12 @@ export default function Login(props) {
             type="password"
             id="password"
             autoComplete="current-password"
-            onChange={onChangePassword}
             inputRef={register({
-              required: "Required",
-              minLength: 6,
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: 'Password must have at least 6 characters'
+              },
             })}
             error={!!errors?.password?.message}
             helperText={!!errors?.password?.message && errors.password.message}
