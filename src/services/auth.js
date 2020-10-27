@@ -7,7 +7,7 @@ export async function register(email, password, firstName, lastName) {
     
     if (response.data.token) {
       window.localStorage.setItem(SESSION_PROPERTY.TOKEN, response.data.token);
-      return { data: response.data, success: true };
+      return { success: true };
     }
 
     throw new Error('Try again');
@@ -22,7 +22,7 @@ export async function login(email, password) {
     
     if (response.data.token) {
       window.localStorage.setItem(SESSION_PROPERTY.TOKEN, response.data.token);
-      return { data: response.data, success: true };
+      return { success: true };
     }
 
     throw new Error('Try again');
@@ -34,3 +34,12 @@ export async function login(email, password) {
 export default function logout() {
   window.localStorage.removeItem(SESSION_PROPERTY.TOKEN);
 } 
+
+export async function isAuthenticated() {
+  const token = window.localStorage.getItem(SESSION_PROPERTY.TOKEN);
+  // const email = storage.getItem(SESSION_PROPERTY.EMAIL);
+
+  if (!token) return false;
+  
+  return true;
+}

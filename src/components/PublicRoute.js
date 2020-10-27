@@ -3,14 +3,14 @@ import { ROUTES } from '../constants';
 
 import { isAuthenticated } from '../services/auth';
 
-const PrivateRoute = ({ ...props }) => {
+const PublicRoute = ({ ...props }) => {
   const isAuth = isAuthenticated();
 
-  if (!isAuth) {
-    return <Redirect to={ROUTES.LOGIN} />;
+  if (isAuth) {
+    return <Redirect to={ROUTES.DASHBOARD} />;
   }
 
   return <Route {...props} />;
 };
 
-export default PrivateRoute;
+export default PublicRoute;
