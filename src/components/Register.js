@@ -56,35 +56,10 @@ const useStyles = makeStyles((theme) => ({
 export default function SignUp() {
   const classes = useStyles();
   const history = useHistory();
-  const { handleSubmit, register, errors } = useForm();
-
-  const [email, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const { handleSubmit, register, errors } = useForm({ mode: 'onChange' });
   const [showFormError, setShowFormError] = useState({ show: false, message: '' });
 
-  const onChangeEmail = (e) => {
-    const email = e.target.value;
-    setUsername(email);
-  };
-
-  const onChangePassword = (e) => {
-    const password = e.target.value;
-    setPassword(password);
-  };
-
-  const onChangeFirstName = (e) => {
-    const firstName = e.target.value;
-    setFirstName(firstName);
-  };
-
-  const onChangeLastName = (e) => {
-    const lastName = e.target.value;
-    setLastName(lastName);
-  };
-
-  const handleRegister = async _ => {
+  const handleRegister = async ({ email, password, firstName, lastName }) => {
     setShowFormError({ show: false });
     const response = await registerService(email, password, firstName, lastName);
   
@@ -118,10 +93,12 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
-                onChange={onChangeFirstName}
                 inputRef={register({
                   required: "Required",
-                  minLength: 2,
+                  minLength: {
+                    value: 2,
+                    message: 'Name is too short',
+                  },
                 })}
                 error={!!errors?.firstName?.message}
                 helperText={!!errors?.firstName?.message && errors.firstName.message}
@@ -136,10 +113,12 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
-                onChange={onChangeLastName}
                 inputRef={register({
                   required: "Required",
-                  minLength: 2,
+                  minLength: {
+                    value: 2,
+                    message: 'Last name is too short',
+                  },
                 })}
                 error={!!errors?.lastName?.message}
                 helperText={!!errors?.lastName?.message && errors.lastName.message}
@@ -154,7 +133,6 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                onChange={onChangeEmail}
                 inputRef={register({
                   required: "Required",
                   pattern: {
@@ -176,10 +154,12 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                onChange={onChangePassword}
                 inputRef={register({
                   required: "Required",
-                  minLength: 6,
+                  minLength: {
+                    value: 6,
+                    message: 'Password is too short',
+                  },
                 })}
                 error={!!errors?.password?.message}
                 helperText={!!errors?.password?.message && errors.password.message}
