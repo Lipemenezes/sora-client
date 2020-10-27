@@ -35,11 +35,7 @@ export default function logout() {
   window.localStorage.removeItem(SESSION_PROPERTY.TOKEN);
 } 
 
-export async function isAuthenticated() {
+export function isAuthenticated() {
   const token = window.localStorage.getItem(SESSION_PROPERTY.TOKEN);
-  // const email = storage.getItem(SESSION_PROPERTY.EMAIL);
-
-  if (!token) return false;
-  
-  return true;
+  return !!token;
 }
