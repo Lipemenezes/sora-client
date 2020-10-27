@@ -6,13 +6,13 @@ export async function register(email, password, firstName, lastName) {
     const response = await http.post(API_ROUTES.REGISTER, { email, password, firstName, lastName });
     
     if (response.data.token) {
-      window.localStorage.setItem(SESSION_PROPERTY.TOKEN);
+      window.localStorage.setItem(SESSION_PROPERTY.TOKEN, response.data.token);
+      return { data: response.data, success: true };
     }
 
-    return response.data;
+    throw new Error('Try again');
   } catch (e) {
-    console.error(e.message);
-    return false;
+    return { success: false, message: e.response.data.error };
   }
 };
 
@@ -22,12 +22,12 @@ export async function login(email, password) {
     
     if (response.data.token) {
       window.localStorage.setItem(SESSION_PROPERTY.TOKEN, response.data.token);
+      return { data: response.data, success: true };
     }
 
-    return response.data;
+    throw new Error('Try again');
   } catch (e) {
-    console.error(e.message);
-    return false;
+    return { success: false, message: e.response.data.error };
   }
 };
 
