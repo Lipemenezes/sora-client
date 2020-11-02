@@ -8,7 +8,15 @@ import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import { ROUTES } from './constants';
 
-const theme = createMuiTheme({});
+import grey from '@material-ui/core/colors/grey';
+
+const theme = createMuiTheme({
+  palette: {
+    secondary: {
+      main: grey[50],
+    }
+  }
+});
 
 const App = () => {
   return (

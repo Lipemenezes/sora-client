@@ -13,4 +13,6 @@ export const SESSION_PROPERTY = {
 export const API_ROUTES = {
   LOGIN: '/login',
   REGISTER: '/register',
+  GET_SKILLS: '/skills/getByStudent',
+  ASK_QUESTION: '/questions/whoToAsk',
 }
