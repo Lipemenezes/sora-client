@@ -12,6 +12,10 @@ import grey from '@material-ui/core/colors/grey';
 
 const theme = createMuiTheme({
   palette: {
+    primary: {
+      main: '#1B9CFC',
+      contrastText: '#FFF',
+    },
     secondary: {
       main: grey[50],
     }

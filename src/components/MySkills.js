@@ -29,10 +29,7 @@ export default function MySkills() {
 
     const skill = skills.find(skill => skill.id === skillId);
 
-    console.log(skill)
-
     if (response.success) {
-      console.log(response.whoToAsk);
       const whoCanHelp = response.whoToAsk[0];
       setWhoCanHelp({ skillName: skill.title, name: `${whoCanHelp.first_name} ${whoCanHelp.last_name}`, role: whoCanHelp.role });
     }
@@ -60,7 +57,7 @@ export default function MySkills() {
 
   useEffect(() => {
     getMySkills();
-  });
+  }, []);
 
   return (
       loading 
