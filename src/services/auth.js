@@ -31,7 +31,7 @@ export async function login(email, password) {
   }
 };
 
-export default function logout() {
+export function logout() {
   window.localStorage.removeItem(SESSION_PROPERTY.TOKEN);
 } 
 

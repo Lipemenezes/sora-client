@@ -1,9 +1,11 @@
 import http from '../httpCommon';
 import { API_ROUTES } from '../constants';
+import authHeader from './authHeader';
 
 export async function whoToAsk(skillId) {
   try {
-    const response = await http.get(API_ROUTES.ASK_QUESTION, { params: { skillId } });
+    const headers = authHeader();
+    const response = await http.get(API_ROUTES.ASK_QUESTION, { params: { skillId }, headers });
     
     if (response.data) {
       return { success: true, whoToAsk: response.data.data };
