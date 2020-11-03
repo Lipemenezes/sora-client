@@ -1,4 +1,8 @@
-# Running the project
+# Sora client
+
+Student app for Sora =]
+
+## Running the project
 
 - Clone the project
 
