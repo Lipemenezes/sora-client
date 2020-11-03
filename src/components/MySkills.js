@@ -57,7 +57,7 @@ export default function MySkills() {
 
   useEffect(() => {
     getMySkills();
-  }, []);
+  }, [JSON.stringify(skills)]);
 
   return (
       loading 
