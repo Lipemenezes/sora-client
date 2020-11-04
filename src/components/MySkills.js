@@ -30,8 +30,8 @@ export default function MySkills() {
     const skill = skills.find(skill => skill.id === skillId);
 
     if (response.success) {
-      const whoCanHelp = response.whoToAsk[0];
-      setWhoCanHelp({ skillName: skill.title, name: `${whoCanHelp.first_name} ${whoCanHelp.last_name}`, role: whoCanHelp.role });
+      const whoCanHelp = response.whoToAsk[0] || { empty: true };
+      setWhoCanHelp({ skillName: skill.title, name: `${whoCanHelp.first_name} ${whoCanHelp.last_name}`, role: whoCanHelp.role, empty: whoCanHelp.empty });
     }
   };
 
@@ -74,7 +74,12 @@ export default function MySkills() {
                     Who can help me with <strong>{whoCanHelp.skillName}</strong>:
                   </Typography>
                   <Typography color="textSecondary" gutterBottom variant="h6">
-                    The {whoCanHelp.role} {whoCanHelp.name}
+                    {
+                      whoCanHelp.empty ?
+                      'No one =[' :
+                      `The ${whoCanHelp.role} ${whoCanHelp.name}`
+                    }
+                    
                   </Typography>
                 </CardContent>
               </Card>
